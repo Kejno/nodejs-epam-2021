@@ -1,6 +1,6 @@
-const fs = require('fs');
-const path = require('path')
-const csv = require('csvtojson');
+import path from 'path'
+import fs from 'fs'
+import { csv } from 'csvtojson'
 
 const csvFilePath = path.join(__dirname, 'csv', 'input.csv')
 const outputFilePath = path.join(__dirname, 'output', 'output.txt')
@@ -10,7 +10,7 @@ let writeableStream = fs.createWriteStream(outputFilePath);
 
 readableStream.on('data', async (chunk) => {
 
-    const jsonObj = await csv().fromString(chunk);
+    const jsonObj = await csv().fromString(chunk)
 
     jsonObj.forEach((value) => {
         const result = Object.keys(value).reduce((acc, curr) => {
@@ -20,8 +20,6 @@ readableStream.on('data', async (chunk) => {
         }, {})
         writeableStream.write(JSON.stringify(result) + '\n');
     })
-
-
 });
 readableStream.on('error', () => {
     console.error('Any error, try again')
