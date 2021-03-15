@@ -15,7 +15,9 @@ readableStream.on('data', async (chunk) => {
     jsonObj.forEach((value) => {
         const result = Object.keys(value).reduce((acc, curr) => {
             const smallValue = curr.toLowerCase();
-            acc[smallValue] = value[curr]
+            if(smallValue !== 'amount'){
+                acc[smallValue] = value[curr]
+            }
             return acc
         }, {})
         writeableStream.write(JSON.stringify(result) + '\n');
