@@ -45,6 +45,7 @@ pipeline(
       console.error('Pipeline failed.', err);
     } else {
       console.log('Pipeline succeeded.');
+      process.exit(0)
     }
   }
 );
