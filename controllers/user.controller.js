@@ -1,27 +1,16 @@
-const uuid = require('uuid');
-const ApiError = require('../error/ApiError');
-let users = require('../data/users');
+import ApiError from '../error/ApiError';
+import { users } from '../data/users';
+import { createUserToDb } from '../services/userService';
 
-class UserController {
-    createUser(req, res) {
-        const createNewUser = ({ login, password, age }) => ({
-            id: uuid.v4(),
-            login,
-            password,
-            age,
-            isDeleted: false
-        });
-        const newUser = createNewUser(req.body);
+export default class UserController {
+    async createUser(req, res) {
+        const createdUser = await createUserToDb(req.body);
 
-        const isLoginExists = users.filter(user => !user.isDeleted && user.login === newUser.login);
-        if (isLoginExists.length) {
-            return res.json({ message: 'login should be unique' });
+        if (createdUser.errorCode === 409) {
+            return res.status(409).json(createdUser);
         }
 
-
-        users.push(newUser);
-
-        res.json(newUser);
+        res.json(createdUser);
     }
 
     getUsers(req, res) {
@@ -93,4 +82,3 @@ class UserController {
     }
 }
 
-module.exports = new UserController();

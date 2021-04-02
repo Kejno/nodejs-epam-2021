@@ -1,4 +1,4 @@
-const users = [
+export const users = [
     {
         'id': '9b3fafe2-76b1-4a8b-b668-4177e1e820f5',
         'login': 'fitl_541',
@@ -71,4 +71,3 @@ const users = [
     }
 ];
 
-module.exports = users;

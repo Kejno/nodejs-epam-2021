@@ -1,10 +1,23 @@
-const express = require('express');
-const userRouter = require('./routes/user.routes');
+import express from 'express';
+import router from './routes/index';
+import sequelize from './db';
 
 const PORT = 8080;
 
 const app = express();
 app.use(express.json());
-app.use('/api', userRouter);
+app.use('/api', router);
 
-app.listen(PORT, () => console.log('server started'));
+
+const start = async () => {
+    try {
+        await sequelize.authenticate();
+        await sequelize.sync();
+        app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+
+start();

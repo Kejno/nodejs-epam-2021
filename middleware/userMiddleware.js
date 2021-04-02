@@ -1,5 +1,5 @@
-const { querySchema, bodySchemaForCreate, bodySchemaForUpdate } = require('../schemas/userSchema');
-const ApiError = require('../error/ApiError');
+import { querySchema, bodySchemaForCreate, bodySchemaForUpdate } from '../schemas/userSchema';
+import ApiError from '../error/ApiError';
 
 const getAllUsersMiddleware = async (req, res, next) => {
     try {
@@ -31,4 +31,4 @@ const updateUserMiddleware = async (req, res, next) => {
     }
 };
 
-module.exports = { getAllUsersMiddleware, createUserMiddleware, updateUserMiddleware };
+export { getAllUsersMiddleware, createUserMiddleware, updateUserMiddleware };
