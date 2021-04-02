@@ -1,6 +1,6 @@
 import ApiError from '../error/ApiError';
 import { users } from '../data/users';
-import { createUserToDb } from '../services/userService';
+import { createUserToDb, getAllUsers } from '../services/userService';
 
 export default class UserController {
     async createUser(req, res) {
@@ -42,7 +42,7 @@ export default class UserController {
             return { users: usersListForResponse, count: usersListForResponse.length };
         };
 
-        res.json(getAutoSuggestUsers(loginSubstring, limit));
+        res.json(getAllUsers());
     }
 
     getUserById(req, res) {
