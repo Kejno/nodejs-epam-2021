@@ -1,48 +1,94 @@
+import { Op } from 'sequelize';
 import User from '../models/User';
 import ApiError from '../error/ApiError';
 import { formatForCreate } from '../formatters/userFormatter';
 
-export const createUserToDb = async ({ login, password, age }) => {
+export const createUserService = async (userData) => {
     try {
-        const candidate = await User.findOne({ where: { login } });
+        const candidate = await User.findOne({
+            attributes: ['id'],
+            where: {
+                [Op.and]: [{ login: userData.login }, { is_deleted: false }]
+            }
+        });
 
         if (candidate) {
             return { errorCode: 409, message: 'login should be unique' };
         }
 
-        const formatedUser = formatForCreate({ login, password, age });
-        const createdUser = await User.create(formatedUser);
+        const formatedUser = formatForCreate(userData);
+        const { id, login, age } = await User.create(formatedUser);
 
-        return createdUser;
+        return { id, login, age };
     } catch (error) {
         return ApiError.badRequest(error.details[0].message);
     }
 };
 
-export const getAllUsers = async (limit, loginSubstring) => {
+export const getUsersService = async ({ limit }) => {
     try {
-        const users = await User.findAndCountAll({limit: 1});
+        const usersData = await User.findAndCountAll(
+            {
+                attributes: ['id', 'login', 'age'],
+                limit,
+                where : { is_deleted: false },
+                order: ['login']
+            }
+        );
 
-        const filteredUsersList = users.rows
-            .filter(user => !user.dataValues.is_deleted)
-            .map(user => {
-                // eslint-disable-next-line no-unused-vars
-                const { password, createdAt, updatedAt, is_deleted, ...rest } = user.dataValues;
-                return rest;
-            });
-
-
-        const sortedUsersList = filteredUsersList.sort((a, b) => {
-            const loginA = a.login.toLowerCase();
-            const loginB = b.login.toLowerCase();
-            if (loginA < loginB) return -1;
-            if (loginA > loginB) return 1;
-            return 0;
-        });
-
-console.log(sortedUsersList)
-        return sortedUsersList;
+        return usersData;
     } catch (error) {
         return ApiError.badRequest(error.details[0].message);
+    }
+};
+
+export const getUserByIdService = async (userId) => {
+    try {
+        const userData = await User.findOne({
+            attributes: ['id', 'login', 'age'],
+            where: { id: userId }
+        });
+
+        if (!userData || userData.dataValues.is_deleted) {
+            return ApiError.badRequest('user not found');
+        }
+        const user = userData.dataValues;
+        const { id, login, age } = user;
+
+        return { id, login, age };
+    } catch (error) {
+        return ApiError.badRequest(error.details[0].message);
+    }
+};
+
+export const updateUserService = async (userId, body) => {
+    try {
+        const userData = await User.update(body, {
+            where: {
+                id: userId,
+                is_deleted: false
+            },
+            returning: ['id', 'login', 'age']
+        });
+
+
+        return userData[1][0];
+    } catch (error) {
+        return ApiError.badRequest(error);
+    }
+};
+
+export const deleteUserService = async (userId) => {
+    try {
+        const userData = await User.update({ is_deleted: true }, {
+            where: {
+                id: userId,
+                is_deleted: false
+            }
+        });
+
+        return userData;
+    } catch (error) {
+        return ApiError.badRequest(error);
     }
 };
