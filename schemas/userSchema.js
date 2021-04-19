@@ -1,4 +1,4 @@
-const Joi = require('joi');
+import Joi from 'joi';
 
 const querySchema = Joi.object({
     sort: Joi.string(),
@@ -35,4 +35,4 @@ const bodySchemaForUpdate = Joi.object({
         .max(130)
 });
 
-module.exports = { querySchema, bodySchemaForCreate, bodySchemaForUpdate };
+export { querySchema, bodySchemaForCreate, bodySchemaForUpdate };
