@@ -18,7 +18,6 @@ export const createUserGroupService = async (userGroupData) => {
         }
         return { message: `Not fount user with id = ${userGroupData.user_id}` };
     } catch (error) {
-        // return ApiError.badRequest(error.errors[0].message);
         return ApiError.badRequest(error);
     }
 };
