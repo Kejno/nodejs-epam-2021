@@ -1,4 +1,3 @@
-// import { Op } from 'sequelize';
 import Group from '../models/Group';
 import ApiError from '../error/ApiError';
 import { formatForCreate } from '../formatters/groupFormatter';
@@ -17,7 +16,9 @@ export const createGroupService = async (groupData) => {
 
 export const getGroupsService = async () => {
     try {
-        return await Group.findAndCountAll();
+        return await Group.findAndCountAll({
+            attributes: ['id', 'name', 'permissions']
+        });
     } catch (error) {
         return ApiError.badRequest(error.errors[0].message);
     }
@@ -46,7 +47,7 @@ export const getGroupByIdService = async (groupId) => {
 
 export const updateGroupService = async (groupId, body) => {
     try {
-        const userData = await Group.update(body, {
+        const groupData = await Group.update(body, {
             where: {
                 id: groupId
             },
@@ -54,7 +55,7 @@ export const updateGroupService = async (groupId, body) => {
         });
 
 
-        return userData[1][0];
+        return groupData[1][0];
     } catch (error) {
         return ApiError.badRequest(error);
     }
