@@ -1,3 +1,6 @@
 import { Sequelize } from 'sequelize';
 
-export default new Sequelize('postgres://osdxfkbz:CteXmrbR6owcQunawYZs1MnbOiYVRu-N@tai.db.elephantsql.com:5432/osdxfkbz');
+export default new Sequelize('osdxfkbz', 'osdxfkbz', 'CteXmrbR6owcQunawYZs1MnbOiYVRu-N', {
+    host:'tai.db.elephantsql.com',
+    dialect: 'postgres'
+});
