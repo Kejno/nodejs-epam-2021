@@ -15,7 +15,7 @@ export default class GroupController {
             const { rows, count } = await getGroupsService(req.query);
             res.json({ groups: rows, count });
         } catch (error) {
-            res.json(error.message);
+            res.status(error.status).json(error.message);
         }
     }
 
@@ -25,7 +25,7 @@ export default class GroupController {
             const currentUser = await getGroupByIdService(id);
             res.json(currentUser);
         } catch (error) {
-            res.json(error);
+            res.status(error.status).json(error);
         }
     }
 
@@ -35,7 +35,7 @@ export default class GroupController {
             const updatedUser = await updateGroupService(id, req.body);
             res.json(updatedUser);
         } catch (error) {
-            res.json(error);
+            res.status(error.status).json(error);
         }
     }
 
@@ -45,7 +45,7 @@ export default class GroupController {
             await deleteGroupService(id);
             res.json({ message: 'successfully deleted' });
         } catch (error) {
-            res.json(error);
+            res.status(error.status).json(error);
         }
     }
 }
