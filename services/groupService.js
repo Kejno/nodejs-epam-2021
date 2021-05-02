@@ -1,16 +1,18 @@
 import Group from '../models/Group';
 import ApiError from '../error/ApiError';
+import { INVALID_TEXT_REPRESENTATION, UNIQUE_VIOLATION } from '../constants';
 import { formatForCreate } from '../formatters/groupFormatter';
 
 export const createGroupService = async (groupData) => {
     try {
         const formatedUser = formatForCreate(groupData);
-
         const { id, name, permissions } = await Group.create(formatedUser, { returning: false });
-
         return { id, name, permissions };
     } catch (error) {
-        return ApiError.badRequest(error.errors[0].message);
+        if (error.parent.code === UNIQUE_VIOLATION) {
+            throw ApiError.badRequest(error.errors[0].message);
+        }
+        throw ApiError.internal(error.errors[0].message);
     }
 };
 
@@ -20,7 +22,7 @@ export const getGroupsService = async () => {
             attributes: ['id', 'name', 'permissions']
         });
     } catch (error) {
-        return ApiError.badRequest(error.errors[0].message);
+        throw ApiError.internal(error.errors[0].message);
     }
 };
 
@@ -38,10 +40,10 @@ export const getGroupByIdService = async (groupId) => {
 
         return group;
     } catch (error) {
-        if (error.parent.code === '22P02') {
-            return ApiError.badRequest('groupId is not valid');
+        if (error.parent.code === INVALID_TEXT_REPRESENTATION) {
+            throw ApiError.badRequest('groupId is not valid');
         }
-        return ApiError.badRequest(error.errors[0].message);
+        throw ApiError.internal(error.errors[0].message);
     }
 };
 
@@ -53,22 +55,27 @@ export const updateGroupService = async (groupId, body) => {
             },
             returning: ['id', 'name', 'permissions']
         });
-
-
+        if (!groupData[0]) {
+            throw ApiError.badRequest('group not found');
+        }
         return groupData[1][0];
     } catch (error) {
-        return ApiError.badRequest(error);
+        throw ApiError.internal(error);
     }
 };
 
 export const deleteGroupService = async (groupId) => {
     try {
-        return await Group.destroy({
+        const deletedGroup = await Group.destroy({
             where: {
                 id: groupId
             }
         });
+        if (!deletedGroup) {
+            throw ApiError.badRequest('group not found');
+        }
+        return deletedGroup;
     } catch (error) {
-        return ApiError.badRequest(error);
+        throw ApiError.internal(error);
     }
 };

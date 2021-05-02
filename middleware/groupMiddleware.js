@@ -1,5 +1,6 @@
 import { bodySchemaForCreate, bodySchemaForUpdate } from '../schemas/groupSchema';
 import ApiError from '../error/ApiError';
+import { BAD_REQUEST_STATUS } from '../constants';
 
 
 const createGroupMiddleware = async (req, res, next) => {
@@ -8,7 +9,7 @@ const createGroupMiddleware = async (req, res, next) => {
 
         return next();
     } catch (err) {
-        res.status(400).json(ApiError.badRequest(err.details[0].message));
+        res.status(BAD_REQUEST_STATUS).json(ApiError.badRequest(err.details[0].message));
     }
 };
 
@@ -18,7 +19,7 @@ const updateGroupMiddleware = async (req, res, next) => {
 
         return next();
     } catch (err) {
-        res.status(400).json(ApiError.badRequest(err.details[0].message));
+        res.status(BAD_REQUEST_STATUS).json(ApiError.badRequest(err.details[0].message));
     }
 };
 
