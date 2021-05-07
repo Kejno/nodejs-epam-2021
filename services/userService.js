@@ -1,5 +1,6 @@
 import { Op } from 'sequelize';
 import User from '../models/User';
+import UserGroup from '../models/UserGroup';
 import ApiError from '../error/ApiError';
 import { formatForCreate } from '../formatters/userFormatter';
 
@@ -84,6 +85,12 @@ export const deleteUserService = async (userId) => {
             where: {
                 id: userId,
                 is_deleted: false
+            }
+        });
+
+        await UserGroup.destroy({
+            where: {
+                user_id: userId
             }
         });
 

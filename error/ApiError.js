@@ -1,3 +1,5 @@
+import { BAD_REQUEST_STATUS, INTERNAL_STATUS, FORBIDDEN_STATUS } from '../constants';
+
 export default class ApiError extends Error {
     constructor(status, message) {
         super();
@@ -6,14 +8,14 @@ export default class ApiError extends Error {
     }
 
     static badRequest(message) {
-        return new ApiError(400, message);
+        return new ApiError(BAD_REQUEST_STATUS, message);
     }
 
     static internal(message) {
-        return new ApiError(500, message);
+        return new ApiError(INTERNAL_STATUS, message);
     }
 
     static forbidden(message) {
-        return new ApiError(403, message);
+        return new ApiError(FORBIDDEN_STATUS, message);
     }
 }
