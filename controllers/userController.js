@@ -19,15 +19,19 @@ export default class UserController {
     }
 
     async getUserById(req, res) {
-        const { id } = req.params;
+        try {
+            const { id } = req.params;
 
-        const currentUser = await getUserByIdService(id);
+            const currentUser = await getUserByIdService(id);
 
-        if (currentUser.status === 400) {
-            return res.status(400).json(currentUser);
+            if (currentUser.status === 400) {
+                return res.status(400).json(currentUser);
+            }
+
+            res.json(currentUser);
+        } catch (error) {
+            res.status(error.status).json(error);
         }
-
-        res.json(currentUser);
     }
 
     async updateUser(req, res) {

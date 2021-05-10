@@ -1,8 +1,11 @@
+import { cyan } from 'colors';
+import { ConsoleLogger } from '../utils/logger';
 import { bodySchemaForCreate, bodySchemaForUpdate } from '../schemas/userGroupSchema';
 import ApiError from '../error/ApiError';
 
 
 const createUserGroupMiddleware = async (req, res, next) => {
+    ConsoleLogger.info(`${cyan('Request')}: ${req.method} ${req.url}, ${cyan('Query')}: ${JSON.stringify(req.body)}`);
     try {
         await bodySchemaForCreate.validateAsync(req.body);
 
@@ -13,6 +16,7 @@ const createUserGroupMiddleware = async (req, res, next) => {
 };
 
 const updateUserGroupMiddleware = async (req, res, next) => {
+    ConsoleLogger.info(`${cyan('Request')}: ${req.method} ${req.url}, ${cyan('Query')}: ${JSON.stringify(req.body)}`);
     try {
         await bodySchemaForUpdate.validateAsync(req.body);
 
@@ -22,4 +26,9 @@ const updateUserGroupMiddleware = async (req, res, next) => {
     }
 };
 
-export { createUserGroupMiddleware, updateUserGroupMiddleware };
+const getAllUserGroupsMiddleware = async (req, res, next) => {
+    ConsoleLogger.info(`${cyan('Request')}: ${req.method} ${req.url}, ${cyan('Query')}: ${JSON.stringify(req.query)}`);
+    return next();
+};
+
+export { createUserGroupMiddleware, updateUserGroupMiddleware, getAllUserGroupsMiddleware };

@@ -3,6 +3,7 @@ import User from '../models/User';
 import UserGroup from '../models/UserGroup';
 import ApiError from '../error/ApiError';
 import { formatForCreate } from '../formatters/userFormatter';
+import { INVALID_TEXT_REPRESENTATION } from '../constants';
 
 export const createUserService = async (userData) => {
     try {
@@ -22,7 +23,7 @@ export const createUserService = async (userData) => {
 
         return { id, login, age };
     } catch (error) {
-        return ApiError.badRequest(error.details[0].message);
+        throw ApiError.badRequest(error.details[0].message);
     }
 };
 
@@ -39,7 +40,7 @@ export const getUsersService = async ({ limit }) => {
 
         return usersData;
     } catch (error) {
-        return ApiError.badRequest(error.details[0].message);
+        throw ApiError.badRequest(error.details[0].message);
     }
 };
 
@@ -58,7 +59,10 @@ export const getUserByIdService = async (userId) => {
 
         return { id, login, age };
     } catch (error) {
-        return ApiError.badRequest(error.details[0].message);
+        if (error.parent.code === INVALID_TEXT_REPRESENTATION) {
+            throw ApiError.badRequest('userId is not valid');
+        }
+        throw ApiError.badRequest(error);
     }
 };
 
@@ -75,7 +79,7 @@ export const updateUserService = async (userId, body) => {
 
         return userData[1][0];
     } catch (error) {
-        return ApiError.badRequest(error);
+        throw ApiError.badRequest(error);
     }
 };
 
@@ -96,6 +100,6 @@ export const deleteUserService = async (userId) => {
 
         return userData;
     } catch (error) {
-        return ApiError.badRequest(error);
+        throw ApiError.badRequest(error);
     }
 };

@@ -43,6 +43,7 @@ export default class GroupController {
         try {
             const { id } = req.params;
             await deleteGroupService(id);
+
             res.json({ message: 'successfully deleted' });
         } catch (error) {
             res.status(error.status).json(error);

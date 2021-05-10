@@ -2,13 +2,13 @@ import { createUserGroupService, getUserGroupsService } from '../services/userGr
 
 export default class GroupController {
     async createUserGroup(req, res) {
-        const createdUserGroup = await createUserGroupService(req.body);
+        try {
+            const createdUserGroup = await createUserGroupService(req.body);
 
-        if (createdUserGroup.errorCode === 409) {
-            return res.status(409).json(createdUserGroup);
+            res.json(createdUserGroup);
+        } catch (error) {
+            res.status(error.status).json(error);
         }
-
-        res.json(createdUserGroup);
     }
 
     async getUserGroups(req, res) {
