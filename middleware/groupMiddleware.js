@@ -20,7 +20,6 @@ const updateGroupMiddleware = async (req, res, next) => {
     ConsoleLogger.info(`${cyan('Request')}: ${req.method} ${req.url}, ${cyan('Query')}: ${JSON.stringify(req.query)}`);
     try {
         await bodySchemaForUpdate.validateAsync(req.body);
-
         return next();
     } catch (err) {
         res.status(BAD_REQUEST_STATUS).json(ApiError.badRequest(err.details[0].message));
@@ -33,8 +32,12 @@ const getAllGroupsMiddleware = async (req, res, next) => {
 };
 
 const getGroupByIdMiddleware = async (req, res, next) => {
-    ConsoleLogger.info(`${cyan('Request')}: ${req.method} ${req.url}, ${cyan('Query')}: ${JSON.stringify(req.params)}`);
-    return next();
+    try {
+        ConsoleLogger.info(`${cyan('Request')}: ${req.method} ${req.url}, ${cyan('Query')}: ${JSON.stringify(req.params)}`);
+        return next();
+    } catch (error) {
+        ConsoleLogger.error(error);
+    }
 };
 
 const deleteGroupMiddleware = async (req, res, next) => {
