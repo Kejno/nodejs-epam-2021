@@ -2,12 +2,12 @@ import Group from '../models/Group';
 import ApiError from '../error/ApiError';
 import { INVALID_TEXT_REPRESENTATION, UNIQUE_VIOLATION } from '../constants';
 import { formatForCreate } from '../formatters/groupFormatter';
+import { executionTime } from '../utils/executionFunc';
 
 export const createGroupService = async (groupData) => {
     try {
         const formatedUser = formatForCreate(groupData);
-        const { id, name, permissions } = await Group.create(formatedUser, { returning: false });
-        return { id, name, permissions };
+        await Group.create(formatedUser);
     } catch (error) {
         if (error.parent.code === UNIQUE_VIOLATION) {
             throw ApiError.badRequest(error.errors[0].message);
@@ -18,9 +18,9 @@ export const createGroupService = async (groupData) => {
 
 export const getGroupsService = async () => {
     try {
-        return await Group.findAndCountAll({
+        return await executionTime(Group.findAndCountAll({
             attributes: ['id', 'name', 'permissions']
-        });
+        }));
     } catch (error) {
         throw ApiError.internal(error.errors[0].message);
     }
