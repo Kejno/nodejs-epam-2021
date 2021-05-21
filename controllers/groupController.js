@@ -17,10 +17,10 @@ export default class GroupController {
     async getGroups(req, res) {
         try {
             const { execTime, rows, count } = await getGroupsService(req.query);
-            ConsoleLogger.info(`${cyan('Request')}: ${req.method} ${req.url}, ${cyan('Query')}: ${JSON.stringify(req.query)}, ${green('Execution time:')} ${execTime} ms`);
+            ConsoleLogger.info(execTime);
             res.json({ groups: rows, count });
         } catch (error) {
-            ConsoleLogger.error(`${cyan('Request')}: ${req.method} ${req.url}, ${red('Error')}: ${error.message}`);
+            ConsoleLogger.error(`${red('Error')}: ${error.message}`);
             res.status(error.status).json(error.message);
         }
     }
@@ -29,10 +29,9 @@ export default class GroupController {
         try {
             const { id } = req.params;
             const currentUser = await getGroupByIdService(id);
-            ConsoleLogger.info(`${cyan('Request')}: ${req.method} ${req.url}, ${cyan('Query')}: ${JSON.stringify(req.query)}`);
             res.json(currentUser);
         } catch (error) {
-            ConsoleLogger.error(`${cyan('Request')}: ${req.method} ${req.url}, ${red('Error')}: ${error.message}`);
+            ConsoleLogger.error(`${red('Error')}: ${error.message}`);
             res.status(error.status).json(error);
         }
     }
@@ -41,10 +40,9 @@ export default class GroupController {
         try {
             const { id } = req.params;
             const updatedUser = await updateGroupService(id, req.body);
-            ConsoleLogger.info(`${cyan('Request')}: ${req.method} ${req.url}, ${cyan('Query')}: ${JSON.stringify(req.query)}`);
             res.json(updatedUser);
         } catch (error) {
-            ConsoleLogger.error(`${cyan('Request')}: ${req.method} ${req.url}, ${red('Error')}: ${error.message}`);
+            ConsoleLogger.error(`${red('Error')}: ${error.message}`);
             res.status(error.status).json(error);
         }
     }
@@ -53,10 +51,9 @@ export default class GroupController {
         try {
             const { id } = req.params;
             await deleteGroupService(id);
-            ConsoleLogger.info(`${cyan('Request')}: ${req.method} ${req.url}, ${cyan('Query')}: ${JSON.stringify(req.query)}`);
             res.json({ message: 'successfully deleted' });
         } catch (error) {
-            ConsoleLogger.error(`${cyan('Request')}: ${req.method} ${req.url}, ${red('Error')}: ${error.message}`);
+            ConsoleLogger.error(`${red('Error')}: ${error.message}`);
             res.status(error.status).json(error);
         }
     }
