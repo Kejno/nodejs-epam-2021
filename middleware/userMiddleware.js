@@ -4,7 +4,14 @@ import ApiError from '../error/ApiError';
 const getAllUsersMiddleware = async (req, res, next) => {
     try {
         await querySchema.validateAsync(req.query);
+        return next();
+    } catch (err) {
+        res.status(400).json(ApiError.badRequest(err.details[0].message));
+    }
+};
 
+const getUserByIdMiddleware = async (req, res, next) => {
+    try {
         return next();
     } catch (err) {
         res.status(400).json(ApiError.badRequest(err.details[0].message));
@@ -14,7 +21,6 @@ const getAllUsersMiddleware = async (req, res, next) => {
 const createUserMiddleware = async (req, res, next) => {
     try {
         await bodySchemaForCreate.validateAsync(req.body);
-
         return next();
     } catch (err) {
         res.status(400).json(ApiError.badRequest(err.details[0].message));
@@ -31,4 +37,8 @@ const updateUserMiddleware = async (req, res, next) => {
     }
 };
 
-export { getAllUsersMiddleware, createUserMiddleware, updateUserMiddleware };
+const deleteUserMiddleware = async (req, res, next) => {
+    return next();
+};
+
+export { getAllUsersMiddleware, getUserByIdMiddleware, createUserMiddleware, updateUserMiddleware, deleteUserMiddleware };

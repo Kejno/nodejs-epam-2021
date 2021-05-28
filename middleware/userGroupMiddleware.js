@@ -22,4 +22,8 @@ const updateUserGroupMiddleware = async (req, res, next) => {
     }
 };
 
-export { createUserGroupMiddleware, updateUserGroupMiddleware };
+const getAllUserGroupsMiddleware = async (req, res, next) => {
+    return next();
+};
+
+export { createUserGroupMiddleware, updateUserGroupMiddleware, getAllUserGroupsMiddleware };
