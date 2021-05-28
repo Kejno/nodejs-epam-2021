@@ -1,9 +1,12 @@
 import express from 'express';
+import { config } from 'dotenv';
 import router from './routes/index';
 import sequelize from './db';
 import { ConsoleLogger } from './utils/logger';
 
 const PORT = 8080;
+
+config();
 
 const app = express();
 app.use(express.json());
