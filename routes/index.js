@@ -8,9 +8,9 @@ import { checkToken } from '../middleware/authMiddleware';
 
 const router = new Router();
 
-router.use('/users', checkToken, loggerMiddleware, userRouter);
+router.use('/users', loggerMiddleware, checkToken, userRouter);
 router.use('/login', loggerMiddleware, authRouter);
-router.use('/groups', checkToken, loggerMiddleware, groupRouter);
-router.use('/user-groups', checkToken, loggerMiddleware, userGroupRouter);
+router.use('/groups', loggerMiddleware, checkToken, groupRouter);
+router.use('/user-groups', loggerMiddleware, checkToken, userGroupRouter);
 
 export default router;

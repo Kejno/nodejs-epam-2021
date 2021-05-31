@@ -11,7 +11,6 @@ export const checkToken = async (req, res, next) => {
     ) {
         try {
             token = req.headers.authorization.split(' ')[1];
-
             jwt.verify(token, process.env.JWT_SECRET);
 
             return next();
