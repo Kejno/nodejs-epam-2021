@@ -6,7 +6,7 @@ export const executionTime = async (fn) => {
         const data = await fn;
         const execTime = new Date() - start;
         const template = `${green('Execution time:')} ${execTime} ms`;
-        return { execTime: template, ...data };
+        return { execTime: template, data };
     } catch (error) {
         console.log(error);
     }
